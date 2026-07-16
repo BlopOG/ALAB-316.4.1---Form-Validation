@@ -1,0 +1,41 @@
+// Cache DOM Forms 
+const errorDisplay = document.getElementById('errorDisplay');
+const regForm = document.getElementById('registration');
+const loginForm = document.getElementById('login');
+// Messaging Functions
+function displayMessage(message, inputElement = null, isSuccess = false) {
+    errorDisplay.innerHTML = message;
+    errorDisplay.style.display = 'block';
+    
+    if (isSuccess) {
+        errorDisplay.className = 'success';
+
+        errorDisplay.style.backgroundColor = '#d4edda';
+
+        errorDisplay.style.color = '#155724';
+
+        errorDisplay.style.padding = '10px';
+        errorDisplay.style.marginTop = '15px';
+    } else {
+        errorDisplay.className = 'error';
+
+        errorDisplay.style.backgroundColor = '#f8d7da';
+
+        errorDisplay.style.color = '#721c24';
+        errorDisplay.style.padding = '10px';
+        errorDisplay.style.marginTop = '15px';
+        if (inputElement) {
+            inputElement.focus();
+        }
+    }
+}
+function clearMessage() {
+    errorDisplay.innerHTML = '';
+    errorDisplay.style.display = 'none';
+    errorDisplay.className = '';
+}
+
+function getStoredUsers() {
+    const users = localStorage.getItem('users');
+    return users ? JSON.parse(users) : {};
+}
