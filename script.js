@@ -39,9 +39,6 @@ function getStoredUsers() {
     const users = localStorage.getItem('users');
     return users ? JSON.parse(users) : {};
 }
-regForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    clearMessage();
 
 
 // Registration validation engine 
@@ -49,6 +46,7 @@ regForm.addEventListener('submit', function(e) {
 regForm.addEventListener('submit', function(e) {
     e.preventDefault();
     clearMessage();
+});
 
     // Safely target inputs using their 'name' attribute inside this form
     const usernameInput = regForm.elements['username'];
@@ -79,10 +77,40 @@ regForm.addEventListener('submit', function(e) {
         return displayMessage('Username cannot contain special characters or whitespace.', usernameInput);
     }
 
-    // --- EMAIL VALIDATION ---
+    //  EMAIL VALIDATION 
     if (!emailVal.includes('@') || !emailVal.includes('.')) {
         return displayMessage('Please enter a valid email address.', emailInput);
     }
     if (emailVal.toLowerCase().endsWith('example.com')) {
         return displayMessage('Registration from the "example.com" domain is not permitted.', emailInput);
+    }
+    // Password Validation
+    if (passwordVal.length < 12) {
+        return displayMessage('Password must be at least 12 characters long.', passwordInput);
+    }
+    if (!/[A-Z]/.test(passwordVal)) {
+        return displayMessage('Password must contain at least one uppercase letter.', passwordInput);
+    }
+    if (!/[a-z]/.test(passwordVal)) {
+        return displayMessage('Password must contain at least one lowercase letter.', passwordInput);
+    }
+    if (!/[0-9]/.test(passwordVal)) {
+        return displayMessage('Password must contain at least one numerical digit.', passwordInput);
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>_+\-]/.test(passwordVal)) {
+        return displayMessage('Password must contain at least one special character.', passwordInput);
+    }
+    if (passwordVal.toLowerCase().includes('password')) {
+        return displayMessage('Password cannot contain the word "password".', passwordInput);
+    }
+    if (passwordVal.includes(usernameVal)) {
+        return displayMessage('Password cannot contain your exact username.', passwordInput);
+    }
+    if (passwordVal !== passwordCheckVal) {
+        return displayMessage('Passwords do not match.', passwordCheckInput);
+    }
+
+    // Terms and Condition
+    if (!termsInput.checked) {
+        return displayMessage('You must accept the Terms and Conditions to proceed.', termsInput);
     }
