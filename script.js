@@ -39,3 +39,25 @@ function getStoredUsers() {
     const users = localStorage.getItem('users');
     return users ? JSON.parse(users) : {};
 }
+regForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearMessage();
+
+
+// Registration validation engine 
+
+regForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearMessage();
+
+    // Safely target inputs using their 'name' attribute inside this form
+    const usernameInput = regForm.elements['username'];
+    const emailInput = regForm.elements['email'];
+    const passwordInput = regForm.elements['password'];
+    const passwordCheckInput = regForm.elements['passwordCheck'];
+    const termsInput = regForm.elements['terms'];
+
+    const usernameVal = usernameInput.value.trim();
+    const emailVal = emailInput.value.trim();
+    const passwordVal = passwordInput.value;
+    const passwordCheckVal = passwordCheckInput.value;
