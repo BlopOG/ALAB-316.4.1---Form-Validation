@@ -61,3 +61,28 @@ regForm.addEventListener('submit', function(e) {
     const emailVal = emailInput.value.trim();
     const passwordVal = passwordInput.value;
     const passwordCheckVal = passwordCheckInput.value;
+    //Username validation
+    if (!usernameVal) {
+        return displayMessage('Username cannot be blank.', usernameInput);
+    }
+    if (usernameVal.length < 4) {
+        return displayMessage('Username must be at least 4 characters long.', usernameInput);
+    }
+    
+    const uniqueChars = new Set(usernameVal);
+    if (uniqueChars.size < 2) {
+        return displayMessage('Username must contain at least two unique characters.', usernameInput);
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+    if (!usernameRegex.test(usernameVal)) {
+        return displayMessage('Username cannot contain special characters or whitespace.', usernameInput);
+    }
+
+    // --- EMAIL VALIDATION ---
+    if (!emailVal.includes('@') || !emailVal.includes('.')) {
+        return displayMessage('Please enter a valid email address.', emailInput);
+    }
+    if (emailVal.toLowerCase().endsWith('example.com')) {
+        return displayMessage('Registration from the "example.com" domain is not permitted.', emailInput);
+    }
