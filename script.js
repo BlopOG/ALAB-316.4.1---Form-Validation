@@ -46,10 +46,11 @@ function getStoredUsers() {
 regForm.addEventListener('submit', function(e) {
     e.preventDefault();
     clearMessage();
-});
+
 
     // Safely target inputs using their 'name' attribute inside this form
     const usernameInput = regForm.elements['username'];
+    
     const emailInput = regForm.elements['email'];
     const passwordInput = regForm.elements['password'];
     const passwordCheckInput = regForm.elements['passwordCheck'];
@@ -82,7 +83,7 @@ regForm.addEventListener('submit', function(e) {
         return displayMessage('Please enter a valid email address.', emailInput);
     }
     if (emailVal.toLowerCase().endsWith('example.com')) {
-        return displayMessage('Registration from the "example.com" domain is not permitted.', emailInput);
+        return  displayMessage('Registration from the "example.com" domain is not permitted.', emailInput);
     }
     // Password Validation
     if (passwordVal.length < 12) {
@@ -114,3 +115,61 @@ regForm.addEventListener('submit', function(e) {
     if (!termsInput.checked) {
         return displayMessage('You must accept the Terms and Conditions to proceed.', termsInput);
     }
+    //  Localstorage & unique user check ---
+    const users = getStoredUsers();
+    const lowercaseUsername = usernameVal.toLowerCase();
+
+    if (users[lowercaseUsername]) {
+        return displayMessage('That username is already taken.', usernameInput);
+    }
+
+    // Save user profile data
+    users[lowercaseUsername] = {
+        username: usernameVal,
+        email: emailVal.toLowerCase(),
+        password: passwordVal
+    };
+
+    localStorage.setItem('users', JSON.stringify(users));
+
+    regForm.reset();
+    displayMessage('Registration successful!', null, true);
+});
+//  Login process error
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearMessage();
+
+    const usernameInput = loginForm.elements['username'];
+    const passwordInput = loginForm.elements['password'];
+    const persistInput = loginForm.elements['persist'];
+
+    const usernameVal = usernameInput.value.trim();
+    const passwordVal = passwordInput.value;
+
+    if (!usernameVal) {
+        return displayMessage('Username field cannot be blank.', usernameInput);
+    }
+    if (!passwordVal) {
+        return displayMessage('Password field cannot be blank.', passwordInput);
+    }
+
+    const users = getStoredUsers();
+    const lowercaseUsername = usernameVal.toLowerCase();
+
+    if (!users[lowercaseUsername]) {
+        return displayMessage('Username does not exist.', usernameInput);
+    }
+
+    if (users[lowercaseUsername].password !== passwordVal) {
+        return displayMessage('Incorrect password.', passwordInput);
+    }
+
+    let loginSuccessMessage = 'Login successful! Welcome back.';
+    if  (persistInput.checked) {
+        loginSuccessMessage += ' You will remain logged in.';
+    }
+
+    loginForm.reset();
+    displayMessage(loginSuccessMessage, null, true);
+});
